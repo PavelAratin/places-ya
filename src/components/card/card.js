@@ -1,35 +1,55 @@
 import { openModal } from "../modals/modal";
 
-export function createCard(card, deleteCard, cardTemplate, popupTypeImage, likeCard) {
-    const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
-    const cardImage = cardElement.querySelector('.card__image');
-    const deleteButton = cardElement.querySelector('.card__delete-button');
-    const cardLikeButton = cardElement.querySelector('.card__like-button');
-    const cardDescriptionTitle = cardElement.querySelector('.card__title');
+export function createCard(
+  card,
+  deleteCard,
+  cardTemplate,
+  likeCard,
+  popupTypeImage,
+  handleImageClick
+) {
+  const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
+  const deleteButton = cardElement.querySelector(".card__delete-button");
+  const cardLikeButton = cardElement.querySelector(".card__like-button");
+  const cardImage = cardElement.querySelector(".card__image");
+  const cardDescriptionTitle = cardElement.querySelector(".card__title");
 
-    cardElement.querySelector('.card__title').textContent = card.name;
-    cardImage.src = card.link;
-    cardImage.alt = card.name;  
+  cardElement.querySelector(".card__title").textContent = card.name;
+  cardImage.src = card.link;
+  cardImage.alt = card.name;
 
-    deleteButton.addEventListener('click', () => deleteCard(cardElement));
-    cardLikeButton.addEventListener('click', () => likeCard(cardLikeButton));
+  deleteButton.addEventListener("click", () => deleteCard(cardElement));
 
-    cardElement.addEventListener('click', (evt) => {
-        if(evt.target === deleteButton) {
-            deleteCard(cardElement);
-        }
-        if(evt.target === cardImage) {
-            openModal(popupTypeImage, cardImage, cardDescriptionTitle);
-        }
-    })
+  cardLikeButton.addEventListener("click", () => likeCard(cardLikeButton));
 
-    return cardElement;
-};
+  cardImage.addEventListener("click", () =>
+    handleImageClick(cardImage, popupTypeImage, cardDescriptionTitle)
+  );
 
-export function deleteCard (card) {
-    card.remove();
-};
+  return cardElement;
+}
+
+export function deleteCard(card) {
+  card.remove();
+}
 
 export function likeCard(card) {
-    card.classList.toggle('card__like-button_is-active');
+  card.classList.toggle("card__like-button_is-active");
+}
+
+export function handleImageClick(
+  cardImage,
+  popupTypeImage,
+  cardDescriptionTitle
+) {
+  const cardImageSrc = cardImage.src;
+  const cardImageAlt = cardImage.alt;
+  const cardDescriptionTitleText = cardDescriptionTitle.textContent;
+
+  popupTypeImage.querySelector(".popup__image").src = cardImageSrc;
+  popupTypeImage.querySelector(".popup__image").alt = cardImageAlt;
+  popupTypeImage.querySelector(".popup__caption").textContent =
+    cardDescriptionTitleText;
+
+  openModal(popupTypeImage);
 }

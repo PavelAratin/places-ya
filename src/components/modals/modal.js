@@ -1,23 +1,14 @@
-export function openModal ( popupTypeNewCard, cardImage, cardDescriptionTitle ) {
-    if(cardImage && cardDescriptionTitle) {
-        const cardImageSrc = cardImage.getAttribute('src');
-        const cardImageAlt = cardImage.getAttribute('alt');
-        const cardImageTitle = cardDescriptionTitle.textContent;
-        popupTypeNewCard.querySelector('img').setAttribute('src', cardImageSrc);
-        popupTypeNewCard.querySelector('img').setAttribute('alt', cardImageAlt);
-        popupTypeNewCard.querySelector('.popup__caption').textContent = cardImageTitle;
-    }
+import { handleEscape } from "../handleEscape/handleEscape.js";
 
-    popupTypeNewCard.classList.add('popup_is-opened', 'popup_is-animated');
-
-    document.addEventListener('keydown', (evt) => {
-        if(evt.key === 'Escape') {
-            closeModal(popupTypeNewCard);
-        }
-      })
+export function openModal(modal) {
+  modal.classList.add("popup_is-animated");
+  setTimeout(() => {
+    modal.classList.add("popup_is-opened");
+  }, 1);
+  document.addEventListener("keydown", handleEscape);
 }
 
-export function closeModal ( popup ) {
-    popup.classList.remove('popup_is-opened', 'popup_is-animated');
-    document.removeEventListener('keydown', closeModal);
+export function closeModal(modal) {
+  modal.classList.remove("popup_is-opened");
+  document.removeEventListener("keydown", handleEscape);
 }

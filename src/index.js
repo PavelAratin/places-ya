@@ -1,25 +1,31 @@
-import "./pages/index.css"; // добавьте импорт главного файла стилей
-import { initialCards } from "./scripts/cards";
-import { createCard, deleteCard } from "./components/card/card";
-import { openModal } from "./components/modals/modal";
-import { closeModal } from "./components/modals/modal";
-import { likeCard } from "./components/card/card";
-import { handleFormSubmit } from "./components/handleFormSubmit/hadleFormSubmit";
-
-const cardTemplate = document.getElementById("card-template").content;
-// @todo: DOM узлы
+import "./pages/index.css";
+import { initialCards } from "./scripts/cards.js";
+import { closeModal, openModal } from "./components/modals/modal.js";
+import {
+  createCard,
+  deleteCard,
+  handleImageClick,
+  likeCard,
+} from "./components/card/card.js";
+const cardTemplate = document.querySelector("#card-template").content;
 const cardList = document.querySelector(".places__list");
+const editButton = document.querySelector(".profile__edit-button");
+const popupTypeEdit = document.querySelector(".popup_type_edit");
 const profileAddButton = document.querySelector(".profile__add-button");
 const popupTypeNewCard = document.querySelector(".popup_type_new-card");
-const profileEditButton = document.querySelector(".profile__edit-button");
-const popupTypeEdit = document.querySelector(".popup_type_edit");
 const popups = document.querySelectorAll(".popup");
-const popupTypeImage = document.querySelector(".popup_type_image");
 const formElementEdit = document.forms["edit-profile"];
 const nameInput = formElementEdit.elements["name"];
 const jobInput = formElementEdit.elements["description"];
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const newName = document.querySelector(".popup__input_type_name");
+const newJob = document.querySelector(".popup__input_type_description");
+const popupTypeImage = document.querySelector(".popup_type_image");
+const formElementNewPlace = document.forms["new-place"];
+const newPlaceName = formElementNewPlace.elements["place-name"];
+const newPlaceLink = formElementNewPlace.elements["link"];
+
 const add_icon = new URL("./images/add-icon.svg", import.meta.url);
 const avatar = new URL("./images/avatar.jpg", import.meta.url);
 const card_1 = new URL("./images/card_1.jpg", import.meta.url);
@@ -47,34 +53,61 @@ const images = [
 
 initialCards.forEach(function (card) {
   cardList.append(
-    createCard(card, deleteCard, cardTemplate, popupTypeImage, likeCard)
+    createCard(
+      card,
+      deleteCard,
+      cardTemplate,
+      likeCard,
+      popupTypeImage,
+      handleImageClick
+    )
   );
+});
+
+editButton.addEventListener("click", () => {
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
+  openModal(popupTypeEdit);
 });
 
 profileAddButton.addEventListener("click", () => {
   openModal(popupTypeNewCard);
 });
 
-profileEditButton.addEventListener("click", () => {
-  nameInput.value = profileTitle.textContent;
-  jobInput.value = profileDescription.textContent;
-  openModal(popupTypeEdit);
-});
-
 popups.forEach((popup) => {
   popup.addEventListener("click", (evt) => {
     if (
       evt.target === popup ||
-      evt.target === popup.querySelector(".popup__close")) {
+      evt.target === popup.querySelector(".popup__close")
+    ) {
       closeModal(popup);
     }
-    if (evt.target === popup.querySelector(".popup__button")) {
-      handleFormSubmit(evt, popup, cardList, cardTemplate, popupTypeImage);
-    }
+  });
 });
-    // document.addEventListener('keydown', (evt) => {
-    //   if(evt.key === 'Escape') {
-    //       closeModal(popup);
-    //   }
-    // })
-});
+
+function handleFormSubmitEdit(evt) {
+  evt.preventDefault();
+  profileTitle.textContent = newName.value;
+  profileDescription.textContent = newJob.value;
+  closeModal(popupTypeEdit);
+}
+
+formElementEdit.addEventListener("submit", handleFormSubmitEdit);
+
+function handleFormSubmitNewPlace(evt) {
+  evt.preventDefault();
+  cardList.prepend(
+    createCard(
+      { name: newPlaceName.value, link: newPlaceLink.value },
+      deleteCard,
+      cardTemplate,
+      likeCard,
+      popupTypeImage,
+      handleImageClick
+    )
+  );
+  closeModal(popupTypeNewCard);
+  evt.target.reset();
+}
+
+formElementNewPlace.addEventListener("submit", handleFormSubmitNewPlace);
