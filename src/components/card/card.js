@@ -1,13 +1,6 @@
-import { openModal } from "../modals/modal";
+const cardTemplate = document.querySelector("#card-template").content;
 
-export function createCard(
-  card,
-  deleteCard,
-  cardTemplate,
-  likeCard,
-  popupTypeImage,
-  handleImageClick
-) {
+export function createCard(card, deleteCard, likeCard, handleImageClick) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const cardLikeButton = cardElement.querySelector(".card__like-button");
@@ -23,7 +16,7 @@ export function createCard(
   cardLikeButton.addEventListener("click", () => likeCard(cardLikeButton));
 
   cardImage.addEventListener("click", () =>
-    handleImageClick(cardImage, popupTypeImage, cardDescriptionTitle)
+    handleImageClick(cardImage, cardDescriptionTitle)
   );
 
   return cardElement;
@@ -35,21 +28,4 @@ export function deleteCard(card) {
 
 export function likeCard(card) {
   card.classList.toggle("card__like-button_is-active");
-}
-
-export function handleImageClick(
-  cardImage,
-  popupTypeImage,
-  cardDescriptionTitle
-) {
-  const cardImageSrc = cardImage.src;
-  const cardImageAlt = cardImage.alt;
-  const cardDescriptionTitleText = cardDescriptionTitle.textContent;
-
-  popupTypeImage.querySelector(".popup__image").src = cardImageSrc;
-  popupTypeImage.querySelector(".popup__image").alt = cardImageAlt;
-  popupTypeImage.querySelector(".popup__caption").textContent =
-    cardDescriptionTitleText;
-
-  openModal(popupTypeImage);
 }
