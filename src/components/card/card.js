@@ -1,6 +1,4 @@
-const cardTemplate = document.querySelector("#card-template").content;
-
-export function createCard(card, deleteCard, likeCard, handleImageClick) {
+export function createCard(card, deleteCard, likeCard, handleImageClick, cardTemplate) {
   const cardElement = cardTemplate.querySelector(".card").cloneNode(true);
   const deleteButton = cardElement.querySelector(".card__delete-button");
   const cardLikeButton = cardElement.querySelector(".card__like-button");

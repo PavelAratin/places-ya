@@ -22,6 +22,7 @@ const newPlaceName = formElementNewPlace.elements["place-name"];
 const newPlaceLink = formElementNewPlace.elements["link"];
 const popupImage = document.querySelector(".popup__image");
 const popupCaption = document.querySelector(".popup__caption");
+const cardTemplate = document.querySelector("#card-template").content;
 
 const add_icon = new URL("./images/add-icon.svg", import.meta.url);
 const avatar = new URL("./images/avatar.jpg", import.meta.url);
@@ -53,7 +54,7 @@ initialCards.forEach(function (card) {
 });
 
 function renderCard(card, method = "prepend") {
-  const cardElement = createCard(card, deleteCard, likeCard, handleImageClick);
+  const cardElement = createCard(card, deleteCard, likeCard, handleImageClick, cardTemplate);
   cardList[method](cardElement);
 }
 
@@ -102,13 +103,6 @@ formElementEdit.addEventListener("submit", handleFormSubmitEdit);
 function handleFormSubmitNewPlace(evt) {
   evt.preventDefault();
   renderCard({ name: newPlaceName.value, link: newPlaceLink.value });
-  // cardList.prepend(
-  //   createCard(
-  //     { name: newPlaceName.value, link: newPlaceLink.value },
-  //     deleteCard,
-  //     likeCard,
-  //     handleImageClick
-  //   )
   closeModal(popupTypeNewCard);
   evt.target.reset();
 }
